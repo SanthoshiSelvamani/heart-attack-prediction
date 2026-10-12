@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" role="img" aria-label="Anatomical heart illustration">
+  <!-- superior vena cava (dark, top left) -->
+  <path d="M141 92c0-14 38-17 42-3l3 62c-4 17-40 18-46 2z" fill="#c9344a"/>
+  <ellipse cx="170" cy="100" rx="12" ry="9" fill="#8f1f33" transform="rotate(-18 170 100)"/>
+  <!-- pulmonary artery arching to the top right -->
+  <path d="M168 190c10-52 52-92 112-104 22-4 30 12 14 24-30 22-44 42-48 78-4 30-44 52-78 36z" fill="#ec5663"/>
+  <path d="M222 108c10-26 26-34 40-32 8 2 8 12 0 16-14 6-24 16-30 34z" fill="#ec5663"/>
+  <ellipse cx="236" cy="84" rx="12" ry="6" fill="#c9344a" transform="rotate(-14 236 84)"/>
+  <!-- right atrium (light, left lobe) -->
+  <path d="M68 305c-12-52 18-104 60-120 32-10 48 18 42 52-6 30-48 46-78 78z" fill="#ff8e8c"/>
+  <!-- left atrial appendage (light, right lobe) -->
+  <path d="M236 262c-8-34 14-60 48-52 30 8 40 56 24 82-10 14-54 8-72-30z" fill="#ff9a98"/>
+  <!-- dark vessel crossing the middle (pulmonary veins) -->
+  <path d="M170 262c18-38 46-62 78-70l66 18c14 6 14 36-2 40l-64-12c-26 4-48 18-62 40z" fill="#c9344a"/>
+  <ellipse cx="318" cy="230" rx="6" ry="15" fill="#8f1f33" transform="rotate(10 318 230)"/>
+  <path d="M312 244c8 2 14 12 12 24-6-2-12-10-12-24z" fill="#d9475a"/>
+  <!-- left ventricle (large, bright red) -->
+  <path d="M76 304c-8 40 14 112 84 164 40 28 100 4 134-70 22-46 12-86-4-98-24-20-62-46-94-46-48 0-96 14-120 50z" fill="#ff4a3d"/>
+  <!-- coronary vessels -->
+  <g fill="none" stroke="#cf3340" stroke-width="1.6" stroke-linecap="round" opacity=".75">
+    <path d="M104 316c12 34 20 70 44 118"/>
+    <path d="M118 340c-10 8-16 22-18 40"/>
+    <path d="M136 366c14-4 24-14 28-28"/>
+    <path d="M150 300c20 22 40 52 46 130"/>
+    <path d="M176 360c-14-2-26 6-34 18"/>
+    <path d="M196 392c14-10 26-12 40-6"/>
+    <path d="M214 286c10 36 30 58 62 86"/>
+    <path d="M240 336c-16 0-28 8-34 22"/>
+    <path d="M258 356c10-10 24-14 38-12"/>
+  </g>
+</svg>

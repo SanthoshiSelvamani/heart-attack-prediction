@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Doctor dashboard - Heart Attack Prediction System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="theme-doctor">
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>
+      </span>
+      <div>
+        <h1>Doctor dashboard</h1>
+        <p class="subtitle">Heart Attack Prediction System</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="user-chip">{{ doctor_name }}</span>
+      <button type="button" class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+  <div class="ecg-strip" aria-hidden="true">
+    <svg viewBox="0 0 1800 90" preserveAspectRatio="xMinYMid slice" focusable="false"><path pathLength="1" d="M0 56 h40 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42"/></svg>
+  </div>
+
+  <main class="page">
+    <p class="notice" role="note">Confidential patient information. Model results are educational estimates, not diagnoses.</p>
+    <div id="status" class="status error" role="alert" hidden></div>
+
+    <section class="stat-grid" aria-label="Summary">
+      <div class="card stat"><p class="stat-label">Saved records</p><p class="stat-value" id="statTotal">-</p></div>
+      <div class="card stat"><p class="stat-label" id="statLabel0">Model Class 0</p><p class="stat-value" id="statClass0">-</p></div>
+      <div class="card stat"><p class="stat-label" id="statLabel1">Model Class 1</p><p class="stat-value" id="statClass1">-</p></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-records">
+      <div class="table-head">
+        <h2 id="h-records">Patient records</h2>
+        <div class="search">
+          <label for="searchBox" class="sr-only">Search by name or phone</label>
+          <input id="searchBox" type="search" placeholder="Search by name or phone" maxlength="60" autocomplete="off">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="records">
+          <caption class="sr-only">Saved patient records, newest first</caption>
+          <thead>
+            <tr><th scope="col">ID</th><th scope="col">Saved</th><th scope="col">Patient</th><th scope="col">Phone</th>
+                <th scope="col">Age</th><th scope="col">Result</th><th scope="col"><span class="sr-only">Details</span></th></tr>
+          </thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
+      <p id="emptyMsg" class="table-empty" hidden></p>
+      <div class="pager">
+        <button type="button" class="btn btn-ghost" id="prevBtn" disabled>Previous</button>
+        <span id="pageInfo" aria-live="polite"></span>
+        <button type="button" class="btn btn-ghost" id="nextBtn" disabled>Next</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="detailDialog" aria-labelledby="detailTitle">
+    <div class="dialog-head">
+      <h2 id="detailTitle">Record details</h2>
+      <button type="button" class="btn btn-ghost" id="detailClose" aria-label="Close details">Close</button>
+    </div>
+    <div class="dialog-body"><dl class="feature-list" id="detailList"></dl></div>
+  </dialog>
+
+  <script src="{{ url_for('static', filename='js/doctor.js') }}"></script>
+</body>
+</html>

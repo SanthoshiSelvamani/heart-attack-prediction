@@ -1,0 +1,22 @@
+.env
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.log
+.vscode/
+.idea/
+.DS_Store
+
+# Environment secrets
+.env
+.env.*
+
+# Local database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Model files (only if generated locally and not required in GitHub)
+# *.pkl
+# *.joblib

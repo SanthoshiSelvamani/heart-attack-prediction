@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>Heart Attack Prediction System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#patientForm">Skip to the form</a>
+
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </span>
+      <div>
+        <h1>Heart Attack Prediction System</h1>
+        <p class="subtitle">Heart Health Risk Assessment</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <time id="todayLabel" class="today"></time>
+      <span class="user-chip" title="Signed in">{{ user.full_name }}</span>
+      <button type="button" class="btn btn-ghost" id="infoBtn">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Info
+      </button>
+      <button type="button" class="btn btn-ghost js-reset">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+      <button type="button" class="btn btn-ghost" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+  <div class="ecg-strip" aria-hidden="true">
+    <svg viewBox="0 0 1800 90" preserveAspectRatio="xMinYMid slice" focusable="false"><path pathLength="1" d="M0 56 h40 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42"/></svg>
+  </div>
+
+  <main class="page">
+    <p class="notice" role="note">
+      Educational machine-learning project. Predictions are <strong>not a medical diagnosis</strong> and are
+      no substitute for professional medical advice. For sudden or serious symptoms, seek urgent medical care.
+    </p>
+
+    <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+
+    <form id="patientForm" novalidate autocomplete="off">
+      <div class="form-grid">
+
+        <section class="card" aria-labelledby="h-reg">
+          <h2 id="h-reg">Patient registration</h2>
+          <div class="fields two">
+            <div class="field">
+              <label for="registration_number">Registration number</label>
+              <input id="registration_number" type="text" value="Assigned when saved" readonly aria-describedby="hint-reg">
+              <p class="hint" id="hint-reg">Created by the database, not typed by hand.</p>
+            </div>
+            <div class="field">
+              <label for="registration_date">Date</label>
+              <input id="registration_date" type="text" readonly>
+            </div>
+            <div class="field">
+              <label for="patient_name">Patient name</label>
+              <input id="patient_name" name="patient_name" type="text" value="{{ user.full_name }}" readonly required aria-describedby="hint-name err-patient_name">
+              <p class="hint" id="hint-name">From your account.</p>
+              <p class="field-error" id="err-patient_name" data-error-for="patient_name"></p>
+            </div>
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input id="phone" name="phone" type="tel" value="{{ user.phone }}" readonly required aria-describedby="hint-phone err-phone">
+              <p class="hint" id="hint-phone">From your account.</p>
+              <p class="field-error" id="err-phone" data-error-for="phone"></p>
+            </div>
+            <div class="field">
+              <label for="birth_year">Birth year</label>
+              <input id="birth_year" name="birth_year" type="text" inputmode="numeric" maxlength="4" placeholder="e.g. 1975" required aria-describedby="hint-year err-birth_year">
+              <p class="hint" id="hint-year">Four digits only. Age is calculated by the server.</p>
+              <p class="field-error" id="err-birth_year" data-error-for="birth_year"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-char">
+          <h2 id="h-char">Patient characteristics</h2>
+          <div class="fields">
+            <fieldset class="field choice">
+              <legend>Sex</legend>
+              <div class="segmented">
+                <label><input type="radio" name="sex" value="1" required><span>Male</span></label>
+                <label><input type="radio" name="sex" value="0"><span>Female</span></label>
+              </div>
+              <p class="field-error" data-error-for="sex"></p>
+            </fieldset>
+            <fieldset class="field choice">
+              <legend>Fasting blood sugar above 120 mg/dl (fbs)</legend>
+              <div class="segmented">
+                <label><input type="radio" name="fbs" value="1" required><span>True (1)</span></label>
+                <label><input type="radio" name="fbs" value="0"><span>False (0)</span></label>
+              </div>
+              <p class="field-error" data-error-for="fbs"></p>
+            </fieldset>
+            <fieldset class="field choice">
+              <legend>Exercise-induced angina (exang)</legend>
+              <div class="segmented">
+                <label><input type="radio" name="exang" value="1" required><span>Yes (1)</span></label>
+                <label><input type="radio" name="exang" value="0"><span>No (0)</span></label>
+              </div>
+              <p class="field-error" data-error-for="exang"></p>
+            </fieldset>
+            <div class="field switch-row">
+              <div class="switch-pair">
+                <label class="switch">
+                  <input type="checkbox" id="smoking" name="smoking" role="switch">
+                  <span class="track" aria-hidden="true"></span>
+                  <span>Smoker</span>
+                </label>
+                <label class="switch">
+                  <input type="checkbox" id="alcohol" name="alcohol" role="switch">
+                  <span class="track" aria-hidden="true"></span>
+                  <span>Alcohol</span>
+                </label>
+              </div>
+              <p class="hint">Extra information only. Smoking and alcohol are not among the 13 model inputs.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-clin">
+          <h2 id="h-clin">Clinical categories</h2>
+          <div class="fields two">
+            <div class="field">
+              <label for="cp">Chest pain type (cp)</label>
+              <select id="cp" name="cp" required>
+                <option value="">Select...</option>
+                <option value="0">0 - Typical angina</option>
+                <option value="1">1 - Atypical angina</option>
+                <option value="2">2 - Non-anginal pain</option>
+                <option value="3">3 - Asymptomatic</option>
+              </select>
+              <p class="field-error" data-error-for="cp"></p>
+            </div>
+            <div class="field">
+              <label for="restecg">Resting ECG (restecg)</label>
+              <select id="restecg" name="restecg" required>
+                <option value="">Select...</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+              <p class="field-error" data-error-for="restecg"></p>
+            </div>
+            <div class="field">
+              <label for="slope">Slope</label>
+              <select id="slope" name="slope" required>
+                <option value="">Select...</option>
+                <option value="0">0 - Upsloping</option>
+                <option value="1">1 - Flat</option>
+                <option value="2">2 - Downsloping</option>
+              </select>
+              <p class="field-error" data-error-for="slope"></p>
+            </div>
+            <div class="field">
+              <label for="ca">Major vessels (ca)</label>
+              <select id="ca" name="ca" required>
+                <option value="">Select...</option>
+              </select>
+              <p class="hint">Values come from your heart.csv.</p>
+              <p class="field-error" data-error-for="ca"></p>
+            </div>
+            <div class="field">
+              <label for="thal">Thal</label>
+              <select id="thal" name="thal" required>
+                <option value="">Select...</option>
+              </select>
+              <p class="hint">Codes exactly as used in your heart.csv.</p>
+              <p class="field-error" data-error-for="thal"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-meas">
+          <h2 id="h-meas">Measurements</h2>
+          <div class="fields two">
+            <div class="field">
+              <label for="trestbps">Resting blood pressure (mm Hg)</label>
+              <input id="trestbps" name="trestbps" type="number" inputmode="numeric" min="50" max="300" step="1" required>
+              <p class="field-error" data-error-for="trestbps"></p>
+            </div>
+            <div class="field">
+              <label for="chol">Cholesterol (mg/dl)</label>
+              <input id="chol" name="chol" type="number" inputmode="numeric" min="50" max="700" step="1" required>
+              <p class="field-error" data-error-for="chol"></p>
+            </div>
+            <div class="field">
+              <label for="thalach">Maximum heart rate (bpm)</label>
+              <input id="thalach" name="thalach" type="number" inputmode="numeric" min="40" max="250" step="1" required>
+              <p class="field-error" data-error-for="thalach"></p>
+            </div>
+            <div class="field">
+              <label for="oldpeak">Oldpeak</label>
+              <input id="oldpeak" name="oldpeak" type="number" inputmode="decimal" min="0" max="10" step="0.1" required>
+              <p class="field-error" data-error-for="oldpeak"></p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="predictBtn">Predict Heart Disease Risk</button>
+        <button type="button" class="btn btn-secondary" id="saveBtn" disabled>Save Record</button>
+        <button type="button" class="btn btn-ghost js-reset">Reset</button>
+      </div>
+    </form>
+
+    <section class="card result" id="resultCard" aria-labelledby="resultTitle" hidden>
+      <div class="result-head">
+        <h2 id="resultTitle" tabindex="-1">Assessment result</h2>
+        <span class="badge" id="resultBadge"></span>
+      </div>
+      <p id="resultExplanation" class="result-text"></p>
+      <dl class="result-meta">
+        <div><dt>Patient</dt><dd id="resultPatient"></dd></div>
+        <div><dt>Age</dt><dd id="resultAge"></dd></div>
+        <div><dt>Assessed</dt><dd id="resultTime"></dd></div>
+      </dl>
+      <ul id="resultWarnings" class="warning-list" hidden></ul>
+      <p class="disclaimer">This educational project is not a diagnostic tool. Its output is not a diagnosis or a
+        substitute for qualified medical assessment. Seek urgent medical attention for sudden or serious symptoms.</p>
+    </section>
+
+    <section aria-labelledby="h-charts">
+      <h2 id="h-charts" class="section-title">Charts for this assessment</h2>
+      <div class="chart-grid">
+        <article class="card chart-card" data-ready="false">
+          <h3>Patient characteristics</h3>
+          <div class="chart-box"><canvas id="chart1" role="img" aria-label="Bar chart of sex, fasting blood sugar and exercise-induced angina"></canvas></div>
+          <p class="chart-empty">Run a prediction to see this chart.</p>
+          <p class="chart-note" id="note1"></p>
+        </article>
+        <article class="card chart-card" data-ready="false">
+          <h3>Measurements</h3>
+          <div class="chart-box"><canvas id="chart2" role="img" aria-label="Bar chart of age, blood pressure, cholesterol and maximum heart rate"></canvas></div>
+          <p class="chart-empty">Run a prediction to see this chart.</p>
+          <p class="chart-note" id="note2"></p>
+        </article>
+        <article class="card chart-card" data-ready="false">
+          <h3>Additional measurements</h3>
+          <div class="chart-box"><canvas id="chart3" role="img" aria-label="Bar chart of oldpeak, resting ECG and chest pain type"></canvas></div>
+          <p class="chart-empty">Run a prediction to see this chart.</p>
+          <p class="chart-note" id="note3"></p>
+        </article>
+        <article class="card chart-card" data-ready="false">
+          <h3>Model-related categories</h3>
+          <div class="chart-box"><canvas id="chart4" role="img" aria-label="Bar chart of slope, major vessels and thal"></canvas></div>
+          <p class="chart-empty">Run a prediction to see this chart.</p>
+          <p class="chart-note" id="note4"></p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p id="modelNote">Model: Logistic Regression trained on heart.csv.</p>
+      <p>Not clinically validated. Do not use for medical decisions.</p>
+    </footer>
+  </main>
+
+  <dialog id="infoDialog" aria-labelledby="infoTitle">
+    <div class="dialog-head">
+      <h2 id="infoTitle">About the data features</h2>
+      <button type="button" class="btn btn-ghost" id="infoClose" aria-label="Close information">Close</button>
+    </div>
+    <div class="dialog-body">
+      <dl class="feature-list">
+        <div><dt>Age</dt><dd>The patient's age in years, calculated from the birth year.</dd></div>
+        <div><dt>Sex</dt><dd>Male is entered as 1 and Female as 0, the usual coding of this dataset.</dd></div>
+        <div><dt>Chest pain type (cp)</dt><dd>0 Typical angina, 1 Atypical angina, 2 Non-anginal pain, 3 Asymptomatic.</dd></div>
+        <div><dt>Resting blood pressure (trestbps)</dt><dd>Blood pressure at rest, in mm Hg.</dd></div>
+        <div><dt>Cholesterol (chol)</dt><dd>Serum cholesterol, in mg/dl.</dd></div>
+        <div><dt>Fasting blood sugar (fbs)</dt><dd>1 if fasting blood sugar is above 120 mg/dl, otherwise 0.</dd></div>
+        <div><dt>Resting ECG (restecg)</dt><dd>A coded result of the resting electrocardiogram (0, 1 or 2). The meaning of each code is not stated here because it has not been verified for this project.</dd></div>
+        <div><dt>Maximum heart rate (thalach)</dt><dd>The highest heart rate reached, in beats per minute.</dd></div>
+        <div><dt>Exercise-induced angina (exang)</dt><dd>1 if exercise brought on chest pain, otherwise 0.</dd></div>
+        <div><dt>Oldpeak</dt><dd>ST depression during exercise compared with rest.</dd></div>
+        <div><dt>Slope</dt><dd>Slope of the peak-exercise ST segment: 0 Upsloping, 1 Flat, 2 Downsloping.</dd></div>
+        <div><dt>Major vessels (ca)</dt><dd>The number of major vessels highlighted by a scan. The choices shown are the values found in your heart.csv.</dd></div>
+        <div><dt>Thal</dt><dd>A coded result of a thalassemia-related test. The choices are the codes found in your heart.csv; their meanings depend on the dataset's encoding and are not asserted here.</dd></div>
+      </dl>
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>
+    {%- if mode == 'register' %}Create patient account
+    {%- elif mode == 'doctor-login' %}Doctor sign in
+    {%- else %}Patient sign in{% endif %} - Heart Attack Prediction System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-body{% if mode == 'doctor-login' %} theme-doctor{% endif %}">
+  <header class="auth-hero">
+    <div class="auth-brand">
+      <span class="brand-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">{% if mode == 'doctor-login' %}<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>{% else %}<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>{% endif %}</svg>
+      </span>
+      <div>
+        <p class="auth-site">Heart Attack Prediction System</p>
+        <p class="subtitle">Heart Health Risk Assessment</p>
+      </div>
+    </div>
+  </header>
+  <div class="ecg-strip" aria-hidden="true">
+    <svg viewBox="0 0 1800 90" preserveAspectRatio="xMinYMid slice" focusable="false"><path pathLength="1" d="M0 56 h40 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42 h50 q10 -12 20 0 h18 l5 6 l9 -54 l9 62 l6 -14 h28 q18 -22 36 0 h42"/></svg>
+  </div>
+  <main class="auth-wrap">
+    <section class="card auth-card {% if mode == 'doctor-login' %}auth-doctor{% endif %}" aria-labelledby="authTitle">
+      {% if mode == 'patient-login' %}
+        <h1 id="authTitle">Patient sign in</h1>
+        <p class="auth-intro">Sign in to run a heart health assessment.</p>
+      {% elif mode == 'register' %}
+        <h1 id="authTitle">Create patient account</h1>
+        <p class="auth-intro">Your phone number is your sign-in name.</p>
+      {% else %}
+        <h1 id="authTitle">Doctor sign in</h1>
+        <p class="auth-intro">For doctors only. You can view saved patient records here.</p>
+      {% endif %}
+
+      <div id="authStatus" class="status error" role="alert" hidden></div>
+
+      <form id="authForm" data-mode="{{ mode }}" novalidate>
+        {% if mode == 'register' %}
+        <div class="field">
+          <label for="full_name">Full name</label>
+          <input id="full_name" name="full_name" type="text" maxlength="60" autocomplete="name" required>
+          <p class="field-error" data-error-for="full_name"></p>
+        </div>
+        {% endif %}
+
+        {% if mode == 'doctor-login' %}
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" maxlength="50" autocomplete="username" autocapitalize="none" required>
+          <p class="field-error" data-error-for="username"></p>
+        </div>
+        {% else %}
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input id="phone" name="phone" type="tel" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="e.g. 9876543210" required>
+          <p class="field-error" data-error-for="phone"></p>
+        </div>
+        {% endif %}
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" maxlength="128" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" required>
+          {% if mode == 'register' %}<p class="hint">At least 8 characters, with a letter and a number.</p>{% endif %}
+          <p class="field-error" data-error-for="password"></p>
+        </div>
+
+        {% if mode == 'register' %}
+        <div class="field">
+          <label for="confirm_password">Repeat password</label>
+          <input id="confirm_password" name="confirm_password" type="password" maxlength="128" autocomplete="new-password" required>
+          <p class="field-error" data-error-for="confirm_password"></p>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary auth-submit" id="authSubmit">
+          {%- if mode == 'register' %}Create account{% else %}Sign in{% endif %}</button>
+      </form>
+
+      <div class="auth-links">
+        {% if mode == 'patient-login' %}
+          <a href="{{ url_for('register_page') }}">New patient? Create an account</a>
+          <a href="{{ url_for('doctor_login_page') }}">Doctor sign in</a>
+        {% elif mode == 'register' %}
+          <a href="{{ url_for('login_page') }}">Already registered? Sign in</a>
+        {% else %}
+          <a href="{{ url_for('login_page') }}">Patient sign in</a>
+          <span class="muted">Doctor accounts are created by the administrator.</span>
+        {% endif %}
+      </div>
+    </section>
+
+    <p class="auth-disclaimer">Educational project. Not a medical diagnosis tool.</p>
+  </main>
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
